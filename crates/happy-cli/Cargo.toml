@@ -1,0 +1,22 @@
+[package]
+name = "happy-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "CLI for Happy Coding toolkit"
+
+[[bin]]
+name = "happy"
+path = "src/main.rs"
+
+[dependencies]
+happy-core = { path = "../happy-core" }
+happy-adapters = { path = "../happy-adapters" }
+clap = { workspace = true }
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+colored = { workspace = true }
+indicatif = { workspace = true }
+dirs = { workspace = true }

@@ -1,0 +1,20 @@
+[package]
+name = "happy-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Core types and utilities for Happy Coding toolkit"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+serde_yaml = { workspace = true }
+tokio = { workspace = true }
+async-trait = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+dirs = { workspace = true }
+regex = { workspace = true }
+chrono = { workspace = true }
+notify = { workspace = true }
+notify-debouncer-mini = { workspace = true }

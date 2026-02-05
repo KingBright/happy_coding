@@ -15,6 +15,11 @@ description: Analyze project background, architecture, and tech stack
 
 ---
 name: code-analyst
+description: Analyze project background, architecture, and tech stack
+---
+
+---
+name: code-analyst
 description: Use this skill to analyze an existing codebase. It generates a comprehensive report covering project background, technical architecture, key challenges, and technology choices. It can also perform competitive analysis if requested.
 ---
 
@@ -100,6 +105,7 @@ Save the generated report to a persistent file for future reference.
 1.  **Create Directory**: Ensure `.code_analysis` directory exists in project root.
 2.  **Save File**: Write the report to `.code_analysis/ANALYSIS_REPORT.md`.
     - If the file exists, append a new entry with the current date, OR create a new file with a timestamp (e.g., `ANALYSIS_2024_02_05.md`).
+
 
 
 

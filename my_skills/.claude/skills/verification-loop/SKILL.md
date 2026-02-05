@@ -23,6 +23,11 @@ name: verification-loop
 description: Comprehensive verification system (build, type, lint, test, security)
 ---
 
+---
+name: verification-loop
+description: Comprehensive verification system (build, type, lint, test, security)
+---
+
 # Verification Loop Skill
 
 A comprehensive verification system for Claude Code sessions.
@@ -143,6 +148,7 @@ Run: /verify
 
 This skill complements PostToolUse hooks but provides deeper verification.
 Hooks catch issues immediately; this skill provides comprehensive review.
+
 
 
 

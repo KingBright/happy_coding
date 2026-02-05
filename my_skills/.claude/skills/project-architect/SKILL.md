@@ -25,6 +25,11 @@ description: Start new projects with structured technical foundation
 
 ---
 name: project-architect
+description: Start new projects with structured technical foundation
+---
+
+---
+name: project-architect
 description: Use this skill when starting a NEW project or module. It focuses on converting business efficiency into a testable, modular technical foundation. It enforces TDD readiness by defining clear interfaces between layers and ensures project continuity through rigorous plan management.
 ---
 
@@ -129,6 +134,7 @@ When finishing the architecture phase, output a **Technical Design Document**:
     - [ ] Define Domain Entities
     - [ ] Unit Test Rules
 ```
+
 
 
 

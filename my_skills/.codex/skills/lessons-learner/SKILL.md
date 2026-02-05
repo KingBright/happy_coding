@@ -8,6 +8,11 @@ name: lessons-learner
 description: Record and retrieve past mistakes and API usage lessons
 ---
 
+---
+name: lessons-learner
+description: Record and retrieve past mistakes and API usage lessons
+---
+
 # Lessons Learner Skill
 
 This skill acts as your long-term memory for mistakes and lessons. It ensures that once a mistake is made and solved, it is never repeated.
@@ -99,4 +104,5 @@ If the knowledge directory does not exist, create it:
 mkdir -p ~/.happy_coding/knowledge
 touch ~/.happy_coding/knowledge/general.md
 ```
+
 

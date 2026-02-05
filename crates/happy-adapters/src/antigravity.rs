@@ -5,12 +5,12 @@
 //! - `.agent/workflows/<name>.md` - Workflow definitions
 //! - `.agent/rules/` - User rules
 
-use std::path::{Path, PathBuf};
 use async_trait::async_trait;
 use happy_core::{
-    Adapter, HappyError, BuildResult, Feature, InstallTarget, Platform,
-    ProjectConfig, Result, SkillDefinition, ValidationResult, WorkflowDefinition,
+    Adapter, BuildResult, Feature, HappyError, InstallTarget, Platform, ProjectConfig, Result,
+    SkillDefinition, ValidationResult, WorkflowDefinition,
 };
+use std::path::{Path, PathBuf};
 
 /// Antigravity platform adapter
 pub struct AntigravityAdapter;
@@ -34,7 +34,9 @@ impl AntigravityAdapter {
         content.push_str("---\n\n");
 
         // Prompt content
-        content.push_str(&skill.prompt);
+        if let Some(ref prompt) = skill.prompt {
+            content.push_str(prompt);
+        }
         content.push('\n');
 
         // Parameters section
@@ -64,9 +66,12 @@ impl AntigravityAdapter {
         // Steps
         for (i, step) in workflow.steps.iter().enumerate() {
             content.push_str(&format!("## Step {}\n\n", i + 1));
-            
+
             if let Some(ref skill) = step.skill {
-                content.push_str(&format!("Use skill `${}` to complete this step.\n\n", skill));
+                content.push_str(&format!(
+                    "Use skill `${}` to complete this step.\n\n",
+                    skill
+                ));
             }
             if let Some(ref command) = step.command {
                 content.push_str(&format!("Run command:\n```bash\n{}\n```\n\n", command));
@@ -111,7 +116,12 @@ impl Adapter for AntigravityAdapter {
     }
 
     fn supported_features(&self) -> &[Feature] {
-        &[Feature::Skill, Feature::Workflow, Feature::Rules, Feature::Mcp]
+        &[
+            Feature::Skill,
+            Feature::Workflow,
+            Feature::Rules,
+            Feature::Mcp,
+        ]
     }
 
     fn limitations(&self) -> &[&str] {
@@ -153,19 +163,23 @@ impl Adapter for AntigravityAdapter {
         if !config.commands.is_empty() {
             let rules_dir = output_dir.join("rules");
             self.ensure_dir(&rules_dir).await?;
-            
+
             let mut rules_content = String::from("# Project Commands\n\n");
             for command in &config.commands {
                 rules_content.push_str(&format!("## /{}\n\n", command.name));
                 rules_content.push_str(&format!("{}\n\n", command.description));
                 if let Some(ref workflow) = command.workflow {
-                    rules_content.push_str(&format!("Use workflow `{}` for this command.\n\n", workflow));
+                    rules_content.push_str(&format!(
+                        "Use workflow `{}` for this command.\n\n",
+                        workflow
+                    ));
                 }
                 if let Some(ref skill) = command.skill {
-                    rules_content.push_str(&format!("Use skill `${}` for this command.\n\n", skill));
+                    rules_content
+                        .push_str(&format!("Use skill `${}` for this command.\n\n", skill));
                 }
             }
-            
+
             let rules_path = rules_dir.join("commands.md");
             self.write_file(&rules_path, &rules_content).await?;
             files.push("rules/commands.md".to_string());
@@ -180,10 +194,12 @@ impl Adapter for AntigravityAdapter {
 
     async fn install(&self, source: &Path, target: &InstallTarget) -> Result<()> {
         let dest = if target.global {
-            self.global_install_path()
-                .ok_or_else(|| HappyError::Other("Cannot determine global install path".to_string()))?
+            self.global_install_path().ok_or_else(|| {
+                HappyError::Other("Cannot determine global install path".to_string())
+            })?
         } else {
-            target.project_path
+            target
+                .project_path
                 .as_ref()
                 .map(PathBuf::from)
                 .unwrap_or_else(|| PathBuf::from(".agent"))

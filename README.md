@@ -10,7 +10,23 @@ Universal toolkit for AI coding environments - manage Claude, Codex, and Antigra
 - **File watching** - Auto-rebuild on file changes in dev mode
 - **Cross-platform** - Works on macOS, Linux, and Windows
 
-## 📦 Installation
+## � Core Skills Library
+
+The toolkit includes a set of high-quality, pre-built skills for professional AI-assisted development:
+
+| Skill | Description |
+|-------|-------------|
+| **`tdd-workflow`** | Enforce Test-Driven Development loops with strict coverage requirements. |
+| **`verification-loop`** | Comprehensive pre-commit check (Build, Type, Lint, Test, Security). |
+| **`project-architect`** | "Day 0" skill for structural design, interface definitions, and roadmap planning. |
+| **`task-orchestrator`** | "Project Manager" for breaking down complex requirements into tracked tasks. |
+| **`code-analyst`** | Deep project analysis generating architecture reports and competitive comparisons. |
+| **`lessons-learner`** | Long-term memory system for recording/retrieving mistakes (Category-based knowledge base). |
+| **`security-review`** | Security audit checklist and patterns. |
+| **`mcp-builder`** | Guide for building Model Context Protocol (MCP) servers. |
+| **`skill-creator`** | Meta-skill for creating and refining new skills. |
+
+## �📦 Installation
 
 ### From source
 ```bash
@@ -32,7 +48,7 @@ happy --help
 happy init [name]        # Initialize a new project
 happy build [-t target]  # Build for all/specific platforms
 happy dev [-t target]    # Development mode with file watching
-happy install [-g]       # Install built artifacts
+happy install --global   # Install built artifacts to global environment (~/.claude, etc.)
 happy validate           # Validate configuration
 happy doctor             # Diagnose environment setup
 ```
@@ -73,13 +89,9 @@ happy_coding/
 ├── Cargo.lock
 ├── README.md
 ├── .gitignore
-├── claude_settings.json    # Local config backup
-├── docs/                   # Research & design documents
-│   ├── RESEARCH_SUMMARY.md
-│   ├── claude_code_research_report.md
-│   ├── openai_codex_research_report.md
-│   ├── antigravity_research_report.md
-│   └── unified_devkit_architecture.md
+├── my_skills/              # Example User Project (Reference)
+│   ├── happy.config.yaml
+│   └── skills/
 └── crates/
     ├── happy-core/         # Core types, config, builder, watcher
     ├── happy-adapters/     # Platform-specific adapters
@@ -100,21 +112,18 @@ targets:
     enabled: true
   codex:
     enabled: true
-  antigravity:
-    enabled: false
 
 skills:
-  - name: code-review
-    description: Review code for best practices
-    prompt: |
-      Review the following code and provide feedback...
+  # Option 1: Path-based (Recommended)
+  - name: project-architect
+    path: skills/project-architect
+    description: "Start new projects with structured technical foundation"
 
-workflows:
-  - name: release
-    description: Prepare a release
-    steps:
-      - skill: code-review
-      - command: cargo test
+  # Option 2: Inline Prompt
+  - name: quick-fix
+    description: "Apply quick fixes"
+    prompt: |
+      Analyze the error and suggest 3 potential fixes.
 ```
 
 ## 🔧 Development

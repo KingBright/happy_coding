@@ -100,7 +100,10 @@ pub enum ParameterType {
 pub struct SkillDefinition {
     pub name: String,
     pub description: String,
-    pub prompt: String,
+    #[serde(default)]
+    pub prompt: Option<String>,
+    #[serde(default)]
+    pub path: Option<String>,
     #[serde(default)]
     pub tags: Vec<String>,
     #[serde(default)]

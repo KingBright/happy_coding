@@ -5,11 +5,8 @@ use crate::types::ProjectConfig;
 use std::path::{Path, PathBuf};
 
 /// Configuration file names to search for
-pub const CONFIG_FILE_NAMES: &[&str] = &[
-    "happy.config.yaml",
-    "happy.config.yml",
-    "happy.config.json",
-];
+pub const CONFIG_FILE_NAMES: &[&str] =
+    &["happy.config.yaml", "happy.config.yml", "happy.config.json"];
 
 /// Configuration manager for loading and saving project configurations
 pub struct ConfigManager {
@@ -62,7 +59,7 @@ impl ConfigManager {
 
         // Load and parse
         let content = std::fs::read_to_string(config_path)?;
-        let config: ProjectConfig = if config_path
+        let mut config: ProjectConfig = if config_path
             .extension()
             .map(|e| e == "json")
             .unwrap_or(false)
@@ -71,6 +68,28 @@ impl ConfigManager {
         } else {
             serde_yaml::from_str(&content)?
         };
+
+        // Resolve skill paths
+        let base_dir = config_path.parent().unwrap_or(Path::new("."));
+        for skill in &mut config.skills {
+            if skill.prompt.is_none() {
+                if let Some(ref path_str) = skill.path {
+                    let skill_path = base_dir.join(path_str);
+                    // Check if it's a directory (look for SKILL.md) or a file
+                    let final_path = if skill_path.is_dir() {
+                        skill_path.join("SKILL.md")
+                    } else {
+                        skill_path.clone()
+                    };
+
+                    if final_path.exists() {
+                        let prompt_content = std::fs::read_to_string(&final_path)
+                            .map_err(|e| HappyError::Io(e))?;
+                        skill.prompt = Some(prompt_content);
+                    }
+                }
+            }
+        }
 
         // Cache the result
         self.cache.insert(

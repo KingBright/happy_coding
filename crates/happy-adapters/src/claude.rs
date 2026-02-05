@@ -5,12 +5,12 @@
 //! - `.claude/settings.json` - Settings with hooks
 //! - `.claude/mcp.json` - MCP server configurations
 
-use std::path::{Path, PathBuf};
 use async_trait::async_trait;
 use happy_core::{
-    Adapter, HappyError, BuildResult, Feature, InstallTarget, Platform,
-    ProjectConfig, Result, SkillDefinition, ValidationResult,
+    Adapter, BuildResult, Feature, HappyError, InstallTarget, Platform, ProjectConfig, Result,
+    SkillDefinition, ValidationResult,
 };
+use std::path::{Path, PathBuf};
 
 /// Claude Code platform adapter
 pub struct ClaudeAdapter;
@@ -34,7 +34,9 @@ impl ClaudeAdapter {
         content.push_str("---\n\n");
 
         // Prompt content
-        content.push_str(&skill.prompt);
+        if let Some(ref prompt) = skill.prompt {
+            content.push_str(prompt);
+        }
         content.push('\n');
 
         // Parameters section
@@ -73,9 +75,12 @@ impl ClaudeAdapter {
         let mut settings = serde_json::Map::new();
 
         // Add permissions if defined
-        settings.insert("permissions".to_string(), serde_json::json!({
-            "allowedTools": ["Read", "Write", "Bash(*)"]
-        }));
+        settings.insert(
+            "permissions".to_string(),
+            serde_json::json!({
+                "allowedTools": ["Read", "Write", "Bash(*)"]
+            }),
+        );
 
         // Add MCP configuration if present
         if let Some(ref mcp) = config.mcp {
@@ -83,7 +88,10 @@ impl ClaudeAdapter {
             for server in &mcp.servers {
                 let mut server_config = serde_json::Map::new();
                 if let Some(ref cmd) = server.command {
-                    server_config.insert("command".to_string(), serde_json::Value::String(cmd.clone()));
+                    server_config.insert(
+                        "command".to_string(),
+                        serde_json::Value::String(cmd.clone()),
+                    );
                 }
                 if !server.args.is_empty() {
                     server_config.insert("args".to_string(), serde_json::json!(server.args));
@@ -94,7 +102,10 @@ impl ClaudeAdapter {
                 if !server.env.is_empty() {
                     server_config.insert("env".to_string(), serde_json::json!(server.env));
                 }
-                servers.insert(server.name.clone(), serde_json::Value::Object(server_config));
+                servers.insert(
+                    server.name.clone(),
+                    serde_json::Value::Object(server_config),
+                );
             }
             settings.insert("mcpServers".to_string(), serde_json::Value::Object(servers));
         }
@@ -131,7 +142,13 @@ impl Adapter for ClaudeAdapter {
     }
 
     fn supported_features(&self) -> &[Feature] {
-        &[Feature::Skill, Feature::Workflow, Feature::Command, Feature::Hooks, Feature::Mcp]
+        &[
+            Feature::Skill,
+            Feature::Workflow,
+            Feature::Command,
+            Feature::Hooks,
+            Feature::Mcp,
+        ]
     }
 
     fn limitations(&self) -> &[&str] {
@@ -174,14 +191,21 @@ impl Adapter for ClaudeAdapter {
                 for server in &mcp.servers {
                     let mut server_config = serde_json::Map::new();
                     if let Some(ref cmd) = server.command {
-                        server_config.insert("command".to_string(), serde_json::Value::String(cmd.clone()));
+                        server_config.insert(
+                            "command".to_string(),
+                            serde_json::Value::String(cmd.clone()),
+                        );
                     }
                     if !server.args.is_empty() {
                         server_config.insert("args".to_string(), serde_json::json!(server.args));
                     }
-                    servers.insert(server.name.clone(), serde_json::Value::Object(server_config));
+                    servers.insert(
+                        server.name.clone(),
+                        serde_json::Value::Object(server_config),
+                    );
                 }
-                let content = serde_json::to_string_pretty(&serde_json::json!({ "mcpServers": servers }))?;
+                let content =
+                    serde_json::to_string_pretty(&serde_json::json!({ "mcpServers": servers }))?;
                 self.write_file(&mcp_path, &content).await?;
                 files.push("mcp.json".to_string());
             }
@@ -196,10 +220,12 @@ impl Adapter for ClaudeAdapter {
 
     async fn install(&self, source: &Path, target: &InstallTarget) -> Result<()> {
         let dest = if target.global {
-            self.global_install_path()
-                .ok_or_else(|| HappyError::Other("Cannot determine global install path".to_string()))?
+            self.global_install_path().ok_or_else(|| {
+                HappyError::Other("Cannot determine global install path".to_string())
+            })?
         } else {
-            target.project_path
+            target
+                .project_path
                 .as_ref()
                 .map(PathBuf::from)
                 .unwrap_or_else(|| PathBuf::from(".claude"))

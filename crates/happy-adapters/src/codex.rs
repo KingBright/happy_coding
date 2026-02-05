@@ -5,12 +5,12 @@
 //! - `.codex/AGENTS.md` - Agent instructions
 //! - `.codex/config.toml` - Codex configuration
 
-use std::path::{Path, PathBuf};
 use async_trait::async_trait;
 use happy_core::{
-    Adapter, HappyError, BuildResult, Feature, InstallTarget, Platform,
-    ProjectConfig, Result, SkillDefinition, ValidationResult, WorkflowDefinition,
+    Adapter, BuildResult, Feature, HappyError, InstallTarget, Platform, ProjectConfig, Result,
+    SkillDefinition, ValidationResult, WorkflowDefinition,
 };
+use std::path::{Path, PathBuf};
 
 /// OpenAI Codex platform adapter
 pub struct CodexAdapter;
@@ -31,7 +31,9 @@ impl CodexAdapter {
         content.push_str("---\n\n");
 
         // Prompt content
-        content.push_str(&skill.prompt);
+        if let Some(ref prompt) = skill.prompt {
+            content.push_str(prompt);
+        }
         content.push('\n');
 
         // Parameters as requirements
@@ -70,7 +72,10 @@ impl CodexAdapter {
         if !config.workflows.is_empty() {
             content.push_str("### Workflows\n\n");
             for workflow in &config.workflows {
-                content.push_str(&format!("- **{}**: {}\n", workflow.name, workflow.description));
+                content.push_str(&format!(
+                    "- **{}**: {}\n",
+                    workflow.name, workflow.description
+                ));
             }
             content.push('\n');
         }
@@ -98,7 +103,8 @@ impl CodexAdapter {
                         content.push_str(&format!("command = \"{}\"\n", cmd));
                     }
                     if !server.args.is_empty() {
-                        let args: Vec<String> = server.args.iter().map(|a| format!("\"{}\"", a)).collect();
+                        let args: Vec<String> =
+                            server.args.iter().map(|a| format!("\"{}\"", a)).collect();
                         content.push_str(&format!("args = [{}]\n", args.join(", ")));
                     }
                     if let Some(ref url) = server.url {
@@ -190,10 +196,12 @@ impl Adapter for CodexAdapter {
 
     async fn install(&self, source: &Path, target: &InstallTarget) -> Result<()> {
         let dest = if target.global {
-            self.global_install_path()
-                .ok_or_else(|| HappyError::Other("Cannot determine global install path".to_string()))?
+            self.global_install_path().ok_or_else(|| {
+                HappyError::Other("Cannot determine global install path".to_string())
+            })?
         } else {
-            target.project_path
+            target
+                .project_path
                 .as_ref()
                 .map(PathBuf::from)
                 .unwrap_or_else(|| PathBuf::from(".codex"))

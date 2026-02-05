@@ -164,8 +164,11 @@ impl Adapter for ClaudeAdapter {
         // Ensure output directory exists
         self.ensure_dir(output_dir).await?;
 
-        // Generate skills
+        // Always create skills directory, even if empty, to ensure consistent structure
         let skills_dir = output_dir.join("skills");
+        self.ensure_dir(&skills_dir).await?;
+
+        // Generate skills
         for skill in &config.skills {
             let skill_dir = skills_dir.join(&skill.name);
             let skill_path = skill_dir.join("SKILL.md");
@@ -231,10 +234,16 @@ impl Adapter for ClaudeAdapter {
                 .unwrap_or_else(|| PathBuf::from(".claude"))
         };
 
+        // Ensure destination base exists
+        self.ensure_dir(&dest).await?;
+
         // Copy skills directory
         let source_skills = source.join("skills");
+        // Always try to copy if build was successful (source exists)
         if source_skills.exists() {
             let dest_skills = dest.join("skills");
+            // Ensure dest_skills exists (explicitly, though copy_dir_all does it too)
+            self.ensure_dir(&dest_skills).await?;
             copy_dir_all(&source_skills, &dest_skills).await?;
         }
 
@@ -243,6 +252,13 @@ impl Adapter for ClaudeAdapter {
         if source_settings.exists() {
             let dest_settings = dest.join("settings.json");
             tokio::fs::copy(&source_settings, &dest_settings).await?;
+        }
+
+        // Copy mcp.json
+        let source_mcp = source.join("mcp.json");
+        if source_mcp.exists() {
+            let dest_mcp = dest.join("mcp.json");
+            tokio::fs::copy(&source_mcp, &dest_mcp).await?;
         }
 
         Ok(())

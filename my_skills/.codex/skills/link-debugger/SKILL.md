@@ -5,6 +5,11 @@ description: Systematic troubleshooting for data flow and integration issues
 
 ---
 name: link-debugger
+description: Systematic troubleshooting for data flow and integration issues
+---
+
+---
+name: link-debugger
 description: Systematic troubleshooting for data flow and integration issues (Trace Detective)
 ---
 
@@ -55,4 +60,5 @@ If the link is broken (Data doesn't arrive or arrives wrong), use **Binary Searc
 - `write_to_file` / `replace_file_content`: Inject logs.
 - `run_command`: Run tests or trigger flows.
 - `notify_user`: Report findings with "Evidence" (logs).
+
 

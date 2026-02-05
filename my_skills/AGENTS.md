@@ -15,4 +15,5 @@ My personal collection of high-quality development skills
 - `$project-architect`: Start new projects with structured technical foundation
 - `$lessons-learner`: Record and retrieve past mistakes and API usage lessons
 - `$code-analyst`: Analyze project background, architecture, and tech stack
+- `$link-debugger`: Systematic troubleshooting for data flow and integration issues
 

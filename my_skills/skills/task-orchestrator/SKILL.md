@@ -25,6 +25,11 @@ description: Manage complex, multi-step implementation tasks
 
 ---
 name: task-orchestrator
+description: Manage complex, multi-step implementation tasks
+---
+
+---
+name: task-orchestrator
 description: Use this skill when managing complex, multi-step implementation tasks. It acts as a project manager to break down requirements into specific tasks, track progress, and ensure orderly execution. Activate when the user says "start a new task", "implement feature X", or when a request is complex enough to require a plan.
 ---
 
@@ -99,6 +104,7 @@ For each step in the plan:
 - [ ] **Phase 3: Verification**
     - [ ] Step 3.1
 ```
+
 
 
 

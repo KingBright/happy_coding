@@ -37,6 +37,9 @@ skills:
   - name: code-analyst
     path: skills/code-analyst
     description: "Analyze project background, architecture, and tech stack"
+  - name: link-debugger
+    path: skills/link-debugger
+    description: "Systematic troubleshooting for data flow and integration issues"
 
 workflows: []
 commands: []

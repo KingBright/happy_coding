@@ -78,6 +78,16 @@ enum Commands {
         #[command(subcommand)]
         action: ConfigAction,
     },
+
+    /// Run a specific agent
+    Run {
+        /// Agent name (claude, codex, antigravity)
+        agent: String,
+
+        /// Additional arguments for the agent
+        #[arg(trailing_var_arg = true, allow_hyphen_values = true)]
+        args: Vec<String>,
+    },
 }
 
 #[derive(Subcommand)]
@@ -125,7 +135,11 @@ async fn main() {
 
     let result = match cli.command {
         Commands::Init { name, yes } => commands::init::run(&name, yes).await,
-        Commands::Build { target, watch, clean } => commands::build::run(target, watch, clean).await,
+        Commands::Build {
+            target,
+            watch,
+            clean,
+        } => commands::build::run(target, watch, clean).await,
         Commands::Dev { target } => commands::dev::run(target).await,
         Commands::Install { global, target } => commands::install::run(global, target).await,
         Commands::Validate => commands::validate::run().await,
@@ -142,6 +156,7 @@ async fn main() {
             ConfigAction::Pull => commands::config::pull().await,
             ConfigAction::Diff => commands::config::diff().await,
         },
+        Commands::Run { agent, args } => commands::run::execute(agent, args).await,
     };
 
     if let Err(e) = result {

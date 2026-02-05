@@ -7,4 +7,5 @@ pub mod doctor;
 pub mod env;
 pub mod init;
 pub mod install;
+pub mod run;
 pub mod validate;

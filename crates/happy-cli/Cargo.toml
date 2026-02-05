@@ -21,4 +21,6 @@ colored = { workspace = true }
 indicatif = { workspace = true }
 dirs = { workspace = true }
 chrono = { workspace = true }
+which = "4"
+
 

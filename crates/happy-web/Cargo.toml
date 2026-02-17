@@ -1,0 +1,65 @@
+[package]
+name = "happy-web"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[[bin]]
+name = "happy-web"
+path = "src/main.rs"
+
+[dependencies]
+# Pure types (WASM compatible)
+happy-types = { path = "../happy-types", version = "0.1.0" }
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+gloo-timers = "0.3"
+js-sys = "0.3"
+web-sys = { version = "0.3", features = [
+    "console",
+    "Document",
+    "Element",
+    "HtmlElement",
+    "HtmlInputElement",
+    "HtmlSelectElement",
+    "Window",
+    "WebSocket",
+    "MessageEvent",
+    "ErrorEvent",
+    "CloseEvent",
+    "BinaryType",
+    "Location",
+    "Storage",
+    "HtmlCanvasElement",
+    "CanvasRenderingContext2d",
+    "XmlHttpRequest",
+    "XmlHttpRequestResponseType",
+    "ProgressEvent",
+    "ResizeObserver",
+    "ResizeObserverEntry",
+    "ResizeObserverBoxOptions",
+    "ResizeObserverOptions",
+] }
+
+# Serialization
+serde.workspace = true
+serde_json.workspace = true
+serde-wasm-bindgen = "0.6"
+
+# Async
+futures.workspace = true
+
+# Logging
+wasm-logger = "0.2"
+log = "0.4"
+
+# UI Framework
+yew = { version = "0.22", features = ["csr"] }
+yew-router = "0.19"
+
+# Terminal (commented out - version issue)
+# xterm-js-rs = "0.1"
+
+# Time
+chrono.workspace = true

@@ -1,0 +1,91 @@
+[package]
+name = "happy-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "CLI for Happy Coding toolkit"
+
+[[bin]]
+name = "happy"
+path = "src/main.rs"
+
+[dependencies]
+# Core (with crypto enabled)
+happy-core = { path = "../happy-core", features = [] }
+happy-remote-core = { package = "happy-remote-core", path = "../happy-remote-core", features = [
+    "crypto",
+] }
+happy-adapters = { path = "../happy-adapters" }
+happy-types = { path = "../happy-types" }
+
+# Async
+tokio = { workspace = true }
+async-trait = { workspace = true }
+futures = { workspace = true }
+
+# CLI
+clap = { workspace = true }
+clap_complete = { workspace = true }
+dialoguer = { workspace = true }
+indicatif = { workspace = true }
+colored = { workspace = true }
+
+# HTTP Client
+reqwest = { workspace = true, features = [
+    "json",
+    "rustls-tls",
+] }
+
+# WebSocket
+tokio-tungstenite = { workspace = true }
+
+# Terminal & PTY
+portable-pty = { workspace = true }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+serde_yaml = { workspace = true }
+
+# Encryption
+sodiumoxide = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Logging
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+# Time
+chrono = { workspace = true }
+
+# Utilities
+bytes = { workspace = true }
+hex = { workspace = true }
+base64 = { workspace = true }
+uuid = { workspace = true }
+rand = { workspace = true }
+dirs = "6.0"
+whoami = { workspace = true }
+gethostname = "1.0"
+
+# Process management
+sysinfo = "0.38"
+which = "8.0"
+webbrowser = "1.0"
+signal-hook = "0.3"
+
+# Config
+config = { workspace = true }
+tracing-appender = "0.2.4"
+
+# Platform-specific
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+nix = { version = "0.31", features = ["process", "fs", "term"] }
+
+[dev-dependencies]
+tokio-test = { workspace = true }
+tempfile = "3.0"

@@ -1,0 +1,52 @@
+name: my-skills
+version: 1.0.0
+description: "My personal collection of high-quality development skills"
+targets:
+  claude:
+    enabled: true
+  codex:
+    enabled: true
+  antigravity:
+    enabled: true
+
+skills:
+  - name: tdd-workflow
+    path: skills/tdd-workflow
+    description: "Enforce test-driven development with 80%+ coverage"
+  - name: verification-loop
+    path: skills/verification-loop
+    description: "Comprehensive verification system (build, type, lint, test, security)"
+  - name: security-review
+    path: skills/security-review
+    description: "Comprehensive security checklist and patterns"
+  - name: skill-creator
+    path: skills/skill-creator
+    description: "Guide for creating effective skills"
+  - name: mcp-builder
+    path: skills/mcp-builder
+    description: "Guide for creating high-quality MCP servers"
+  - name: task-orchestrator
+    path: skills/task-orchestrator
+    description: "Manage complex, multi-step implementation tasks"
+  - name: project-architect
+    path: skills/project-architect
+    description: "Start new projects with structured technical foundation"
+  - name: lessons-learner
+    path: skills/lessons-learner
+    description: "Record and retrieve past mistakes and API usage lessons"
+  - name: code-analyst
+    path: skills/code-analyst
+    description: "Analyze project background, architecture, and tech stack"
+  - name: link-debugger
+    path: skills/link-debugger
+    description: "Systematic troubleshooting for data flow and integration issues"
+  - name: secure-execution
+    path: skills/secure-execution
+    description: "Security hooks for bash command validation and sandboxed execution"
+  - name: agent-framework
+    path: skills/agent-framework
+    description: "Agent architecture patterns, tool execution, and MCP integration"
+
+workflows: []
+commands: []
+mcp: null

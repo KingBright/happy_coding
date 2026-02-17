@@ -1,0 +1,24 @@
+[package]
+name = "happy-types"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[dependencies]
+# Serialization only - works everywhere
+serde.workspace = true
+serde_json.workspace = true
+chrono.workspace = true
+
+# IDs with WASM support
+uuid = { workspace = true, features = ["v7", "serde", "js"] }
+
+# Error handling
+thiserror.workspace = true
+
+# Minimal utilities
+bytes.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true

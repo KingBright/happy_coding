@@ -1,0 +1,18 @@
+[package]
+name = "happy-adapters"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Platform adapters for Happy Coding toolkit"
+
+[dependencies]
+happy-core = { path = "../happy-core" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+serde_yaml = { workspace = true }
+toml = { workspace = true }
+tokio = { workspace = true }
+async-trait = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+dirs = { workspace = true }

@@ -1,0 +1,49 @@
+# Rust build artifacts
+/target/
+Cargo.lock
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Rust debug files
+*.pdb
+*.dSYM/
+
+# Test and coverage
+*.profraw
+*.profdata
+lcov.info
+tarpaulin-report.html
+coverage/
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+*.secret
+*.key
+
+# Generated files
+*.generated.*
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+refs
+claude_settings.json

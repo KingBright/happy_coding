@@ -1,0 +1,75 @@
+[package]
+name = "happy-server"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[[bin]]
+name = "happy-server"
+path = "src/main.rs"
+
+[dependencies]
+# Core (with crypto enabled)
+happy-core = { package = "happy-remote-core", path = "../happy-remote-core", features = [
+    "crypto",
+], version = "0.1.0" }
+happy-types = { path = "../happy-types" }
+tokio.workspace = true
+async-trait.workspace = true
+futures.workspace = true
+
+# Web framework
+axum.workspace = true
+tower.workspace = true
+tower-http.workspace = true
+
+# Embedded Database (SQLite)
+sqlx = { workspace = true, features = [
+    "sqlite",
+    "runtime-tokio",
+    "migrate",
+    "chrono",
+    "uuid",
+] }
+
+# In-memory cache (replaces Redis)
+dashmap.workspace = true
+
+# Serialization
+serde.workspace = true
+serde_json.workspace = true
+
+# Encryption
+sodiumoxide.workspace = true
+jsonwebtoken.workspace = true
+argon2.workspace = true
+
+# Error handling
+thiserror.workspace = true
+anyhow.workspace = true
+
+# Logging
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+# Time
+chrono.workspace = true
+
+# Utilities
+bytes.workspace = true
+uuid.workspace = true
+rand.workspace = true
+
+# Config
+config.workspace = true
+
+# Object storage
+# rust-s3.workspace = true
+
+# Notifications (disabled for cross-compilation)
+# web-push.workspace = true
+# a2.workspace = true
+
+[dev-dependencies]
+tokio-test.workspace = true

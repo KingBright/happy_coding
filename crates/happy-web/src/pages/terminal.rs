@@ -20,7 +20,7 @@ use web_sys::{
 };
 use yew::prelude::*;
 
-use crate::components::{XTerm, XTermProps};
+use crate::components::{XTerm, LogViewer};
 
 #[derive(Clone, PartialEq)]
 pub struct SessionSummary {
@@ -132,6 +132,9 @@ pub fn terminal_page(_props: &TerminalPageProps) -> Html {
     let commit_message = use_state(|| String::new());
     let show_commit_modal = use_state(|| false);
     let is_amend = use_state(|| false);
+
+    // Log viewer state
+    let log_viewer_open = use_state(|| false);
 
     // Git status info structure
     #[derive(Clone, PartialEq)]
@@ -1254,6 +1257,20 @@ pub fn terminal_page(_props: &TerminalPageProps) -> Html {
         })
     };
 
+    // Log viewer toggle
+    let on_toggle_log_viewer = {
+        let log_viewer_open = log_viewer_open.clone();
+        Callback::from(move |_| {
+            let new_state = !*log_viewer_open;
+            log_viewer_open.set(new_state);
+        })
+    };
+
+    let on_log_viewer_close = {
+        let log_viewer_open = log_viewer_open.clone();
+        Callback::from(move |_| log_viewer_open.set(false))
+    };
+
     // Git file selection
     let on_select_file = {
         let selected_file = selected_file.clone();
@@ -1676,6 +1693,8 @@ pub fn terminal_page(_props: &TerminalPageProps) -> Html {
                                     .find(|s| s.id == session_id_for_header)
                                     .map(|s| s.tag.clone())
                                     .unwrap_or_else(|| "Unknown".to_string());
+                                let on_toggle_log_viewer_for_header = on_toggle_log_viewer.clone();
+                                let on_log_viewer_close_for_header = on_log_viewer_close.clone();
                                 html! {
                                     <>
                                         <div class="terminal-header">
@@ -1683,17 +1702,25 @@ pub fn terminal_page(_props: &TerminalPageProps) -> Html {
                                                 <span class="terminal-session-tag">{ session_tag_for_header }</span>
                                                 <span class="terminal-session-id">{ format!("({})", &session_id_for_header[..8.min(session_id_for_header.len())]) }</span>
                                             </div>
-                                            <button
-                                                class={classes!("btn-terminal-git", if *show_git_panel { "active" } else { "" })}
-                                                onclick={on_toggle_git_panel.clone()}
-                                            >
-                                                { "📝 变更" }
-                                                if let Some(ref status) = *git_status {
-                                                    if !status.modified.is_empty() || !status.staged.is_empty() {
-                                                        <span class="git-badge">{ status.modified.len() + status.staged.len() }</span>
+                                            <div class="terminal-header-actions">
+                                                <button
+                                                    class={classes!("btn-terminal-git", if *show_git_panel { "active" } else { "" })}
+                                                    onclick={on_toggle_git_panel.clone()}
+                                                >
+                                                    { "📝 变更" }
+                                                    if let Some(ref status) = *git_status {
+                                                        if !status.modified.is_empty() || !status.staged.is_empty() {
+                                                            <span class="git-badge">{ status.modified.len() + status.staged.len() }</span>
+                                                        }
                                                     }
-                                                }
-                                            </button>
+                                                </button>
+                                                <button
+                                                    class={classes!("btn-terminal-logs", if *log_viewer_open { "active" } else { "" })}
+                                                    onclick={on_toggle_log_viewer_for_header.clone()}
+                                                >
+                                                    { "📋 Logs" }
+                                                </button>
+                                            </div>
                                         </div>
                                         <div class="terminal-content">
                                             <XTerm
@@ -2038,6 +2065,10 @@ pub fn terminal_page(_props: &TerminalPageProps) -> Html {
                     </div>
                 </div>
             }
+            <LogViewer
+                visible={*log_viewer_open}
+                on_close={on_log_viewer_close.clone()}
+            />
         </div>
     }
 }

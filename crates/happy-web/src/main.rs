@@ -9,10 +9,9 @@ mod components;
 mod pages;
 mod utils;
 
-use components::{LogViewer, ProtectedRoute};
+use components::ProtectedRoute;
 use pages::{Dashboard, TerminalPage, LoginPage, SettingsPage};
 use utils::logger::init_console_capture;
-use yew::use_state;
 
 #[derive(Clone, Routable, PartialEq)]
 enum Route {
@@ -53,32 +52,11 @@ fn switch(routes: Route) -> Html {
 
 #[function_component(App)]
 fn app() -> Html {
-    let log_viewer_open = use_state(|| false);
-
-    let on_log_viewer_close = {
-        let log_viewer_open = log_viewer_open.clone();
-        Callback::from(move |_| log_viewer_open.set(false))
-    };
-
     html! {
         <>
             <BrowserRouter>
                 <Switch<Route> render={switch} />
             </BrowserRouter>
-            <LogViewer
-                visible={*log_viewer_open}
-                on_close={on_log_viewer_close}
-            />
-            // Floating toggle button when viewer is closed
-            if !*log_viewer_open {
-                <button
-                    class="log-viewer-floating-btn"
-                    onclick={Callback::from(move |_| log_viewer_open.set(true))}
-                    title="Open Console Logs"
-                >
-                    {"📋 Logs"}
-                </button>
-            }
         </>
     }
 }

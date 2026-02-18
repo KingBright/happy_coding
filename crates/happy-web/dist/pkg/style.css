@@ -561,6 +561,39 @@ body {
   color: var(--accent-primary);
 }
 
+/* Terminal header actions container */
+.terminal-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Terminal logs button */
+.btn-terminal-logs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-terminal-logs:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-secondary);
+}
+
+.btn-terminal-logs.active {
+  background: rgba(88, 166, 255, 0.15);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
 /* Terminal content area takes remaining space */
 .terminal-content {
   flex: 1;

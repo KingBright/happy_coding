@@ -5,7 +5,7 @@
 use yew::prelude::*;
 use crate::utils::logger::{LogLevel, LogEntry, get_logs, clear_logs, copy_logs_to_clipboard, get_logs_filtered};
 use web_sys::HtmlElement;
-use wasm_bindgen::{JsCast, JsValue};
+use wasm_bindgen::JsValue;
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct LogViewerProps {
@@ -54,10 +54,7 @@ impl Component for LogViewer {
     fn changed(&mut self, ctx: &Context<Self>, old_props: &Self::Properties) -> bool {
         if ctx.props().visible != old_props.visible {
             self.visible = ctx.props().visible;
-            if self.visible {
-                self.logs = get_logs();
-                return true;
-            }
+            return true;
         }
         false
     }
@@ -132,15 +129,7 @@ impl Component for LogViewer {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         if !self.visible {
-            return html! {
-                <button
-                    class="log-viewer-toggle-btn"
-                    onclick={ctx.link().callback(|_| LogViewerMsg::Toggle)}
-                    title="Open Console Logs"
-                >
-                    {"📋 Logs"}
-                </button>
-            };
+            return html! {};
         }
 
         let filtered_logs = &self.logs;

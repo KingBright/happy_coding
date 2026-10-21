@@ -780,17 +780,16 @@ pub fn terminal_page(_props: &TerminalPageProps) -> Html {
                                     // ALWAYS store to buffer first
                                     let text = String::from_utf8_lossy(&bytes).to_string();
 
-                                    // Check if this is the currently selected session
-                                    let is_current_session = selected_session_id_for_msg.as_ref().map(|s| s == session_id).unwrap_or(false);
-
                                     log::info!("terminal_output: session={}, bytes={}, is_current={}", session_id, bytes.len(), is_current_session);
 
+                                    let mut wrote_to_terminal = false;
                                     // For current session: also write directly to terminal for real-time display
                                     if is_current_session {
                                         let writer_opt = terminal_writer_for_msg.borrow().clone();
                                         if let Some(ref writer) = writer_opt {
                                             log::info!("terminal_output: emitting {} bytes via writer", bytes.len());
                                             writer.emit(bytes.clone());
+                                            wrote_to_terminal = true;
                                         } else {
                                             log::warn!("terminal_output: no writer available, content will show on next render");
                                         }
@@ -805,14 +804,17 @@ pub fn terminal_page(_props: &TerminalPageProps) -> Html {
                                             if buffer.len() > 100000 {
                                                 *buffer = buffer[buffer.len() - 80000..].to_string();
                                             }
-                                            // Trigger re-render to show content
-                                            buffer_version_for_msg.set(*buffer_version_for_msg + 1);
+                                            // Trigger re-render to show content ONLY if we didn't write directly
+                                            if !wrote_to_terminal {
+                                                buffer_version_for_msg.set(*buffer_version_for_msg + 1);
+                                            }
                                             log::info!("terminal_output: buffer updated for session {}, total len={}", session_id, buffer.len());
                                         }
                                         Err(_) => {
                                             let buffers_clone = terminal_buffers_for_msg.clone();
                                             let session_id = session_id.to_string();
                                             let version_clone = buffer_version_for_msg.clone();
+                                            let wrote_to_terminal = wrote_to_terminal;
                                             wasm_bindgen_futures::spawn_local(async move {
                                                 if let Ok(mut buffers) = buffers_clone.try_borrow_mut() {
                                                     let buffer = buffers.entry(session_id).or_default();
@@ -820,7 +822,9 @@ pub fn terminal_page(_props: &TerminalPageProps) -> Html {
                                                     if buffer.len() > 100000 {
                                                         *buffer = buffer[buffer.len() - 80000..].to_string();
                                                     }
-                                                    version_clone.set(*version_clone + 1);
+                                                    if !wrote_to_terminal {
+                                                        version_clone.set(*version_clone + 1);
+                                                    }
                                                 }
                                             });
                                         }
